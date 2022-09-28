@@ -83,7 +83,7 @@ namespace TLIVERDED
             //        DataTable uporder = facLabControler.UpdateOrderHeader(rorderh, rfecha);
             //    }
             //}
-            //muobject.Reporte();
+            //muobject.UpdateCPReportePenafiel();
             muobject.Extraer();
 
             
@@ -93,7 +93,344 @@ namespace TLIVERDED
 
         }
 
-        
+        public void Reporte()
+        {
+            //DirectoryInfo di24a = new DirectoryInfo(@"\\10.223.208.41\Users\Administrator\Documents\LIVERDEDUPLOADS");
+            DirectoryInfo di24a = new DirectoryInfo(@"C:\Administración\Proyecto LIVERDED\Ordenes");
+
+            FileInfo[] files24a = di24a.GetFiles("*.dat");
+
+
+            int cantidad24a = files24a.Length;
+            if (cantidad24a > 0)
+            {
+                foreach (var itema in files24a)
+                {
+                    //string sourceFilea = @"\\10.223.208.41\Users\Administrator\Documents\LIVERDEDUPLOADS\" + itema.Name;
+                    //string sourceFilea = @"\\10.223.208.41\Users\Administrator\Documents\LIVERDED\" + itema.Name;
+                    string sourceFile = @"C:\Administración\Proyecto LIVERDED\Ordenes\" + itema.Name;
+
+                    string lna = itema.Name.ToLower();
+                    string Ai_orden = lna.Replace(".dat", "");
+                    facLabControler.PullOrderReport(Ai_orden);
+                    //string destinationFile = @"C:\Administración\Proyecto LIVERDED\Rpro\" + itema.Name;
+                    //System.IO.File.Move(sourceFile, destinationFile);
+
+                    DataTable rtds = facLabControler.ObtSegmento(Ai_orden);
+                    if (rtds.Rows.Count > 0)
+                    {
+                        foreach (DataRow iseg in rtds.Rows)
+                        {
+                            string nseg = iseg["segmento"].ToString();
+                            DataTable resa = facLabControler.GetSegmentoRepetidoReporte(nseg);
+                            //PASO 4 - SI EXISTE LE ACTUALIZA EL ESTATUS A 9
+                            if (resa.Rows.Count > 0)
+                            {
+                                foreach (DataRow gsegta in resa.Rows)
+                                {
+                                    //OBTENGO EL BILLTO Y EL ESTATUS DE SEGMENTOSPORTIMBRARJR Y LO INSERTO
+                                    string nfolio = gsegta["Folio"].ToString();
+                                    DateTime dt = DateTime.Parse(gsegta["Fecha"].ToString());
+                                    string rfecha = dt.ToString("yyyy'/'MM'/'dd HH:mm:ss");
+                                    DataTable resae = facLabControler.GetSegmentoJr(nfolio);
+                                    if (resae.Rows.Count > 0)
+                                    {
+                                        foreach (DataRow gsegtas in resae.Rows)
+                                        {
+                                            string rrseg = gsegtas["segmento"].ToString();
+                                            string rrbillto = gsegtas["billto"].ToString();
+                                            string rrestatus = gsegtas["estatus"].ToString();
+                                            string fechatim = rfecha;
+                                            facLabControler.PullReportUpdate(Ai_orden, rrseg, rrbillto, rrestatus, fechatim);
+                                            //string destinationFile = @"\\10.223.208.41\Users\Administrator\Documents\LIVERDEDUPLOADS\" + item.Name;
+
+
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //OBTENER ESTATUS DEL segmentosportimbrar_JR E INSERTAR EN TABLA
+                                DataTable resae = facLabControler.GetSegmentoJr(nseg);
+                                if (resae.Rows.Count > 0)
+                                {
+                                    foreach (DataRow gsegtas in resae.Rows)
+                                    {
+                                        string rrseg = gsegtas["segmento"].ToString();
+                                        string rrbillto = gsegtas["billto"].ToString();
+                                        string rrestatus = gsegtas["estatus"].ToString();
+                                        string fechatim = "null";
+                                        facLabControler.PullReportUpdate(Ai_orden, rrseg, rrbillto, rrestatus, fechatim);
+
+                                    }
+                                }
+                            }
+                            string destinationFiles = @"C:\Administración\Proyecto LIVERDED\Rpro\" + itema.Name;
+                            System.IO.File.Move(sourceFile, destinationFiles);
+
+                        }
+                    }
+                    else
+                    {
+                        string rrseg = "Cancelada";
+                        facLabControler.PullReportUpdate2(Ai_orden, rrseg);
+                        string destinationFile = @"C:\Administración\Proyecto LIVERDED\Rpro\" + itema.Name;
+                        System.IO.File.Move(sourceFile, destinationFile);
+                    }
+
+                }
+
+            }
+        }
+        public void UpdateCPReporte(string leg)
+        {
+            string lex = "1325479";
+            DataTable resae = facLabControler.GetSegmentoJCLIVERDED(lex);
+            if (resae.Rows.Count > 0)
+            {
+                foreach (DataRow gsegtas in resae.Rows)
+                {
+                    string rorder = gsegtas["orden"].ToString();
+                    string rrseg = gsegtas["segmento"].ToString();
+                    string rrbillto = gsegtas["billto"].ToString();
+                    string rrestatus = gsegtas["estatus"].ToString();
+                    //string fechatim = rfecha;
+                    DataTable rcpp = facLabControler.GetSegmentoJCLIVERDEDCPP(lex);
+                    if (rcpp.Rows.Count > 0)
+                    {
+                        foreach (DataRow ircpp in rcpp.Rows)
+                        {
+                            DateTime dt = DateTime.Parse(ircpp["Fecha"].ToString());
+                            string rfecha = dt.ToString("yyyy'/'MM'/'dd HH:mm:ss");
+                            facLabControler.PullReportUpdateCPP(rrseg, rfecha);
+                        }
+                           
+                    }
+
+                    
+                    //string destinationFile = @"\\10.223.208.41\Users\Administrator\Documents\LIVERDEDUPLOADS\" + item.Name;
+
+
+                }
+            }
+               
+        }
+        public void UpdateCPReportePenafiel(string leg)
+        {
+            string lex = "1325479";
+            DataTable resae = facLabControler.GetSegmentoJCPENAFIEL(leg);
+           
+            if (resae.Rows.Count > 0)
+            {
+                foreach (DataRow gsegtas in resae.Rows)
+                {
+                    string rorder = gsegtas["orden"].ToString();
+                    string rrseg = gsegtas["segmento"].ToString();
+                    
+                    DataTable rcpp = facLabControler.GetSegmentoJCPENAFIELCPP(leg);
+                    if (rcpp.Rows.Count > 0)
+                    {
+                        foreach (DataRow ircpp in rcpp.Rows)
+                        {
+                            DateTime dt = DateTime.Parse(ircpp["Fecha"].ToString());
+                            string rfecha = dt.ToString("yyyy'/'MM'/'dd HH:mm:ss");
+                            facLabControler.PullReportUpdateCPPPENAFIEL(rrseg, rfecha);
+                        }
+
+                    }
+
+
+                    //string destinationFile = @"\\10.223.208.41\Users\Administrator\Documents\LIVERDEDUPLOADS\" + item.Name;
+
+
+                }
+            }
+
+        }
+        public void ReportePenafiel()
+        {
+            //DirectoryInfo di24a = new DirectoryInfo(@"\\10.223.208.41\Users\Administrator\Documents\LIVERDEDUPLOADS");
+            DirectoryInfo di24a = new DirectoryInfo(@"C:\Administración\Proyecto PENAFIEL\Ordenes");
+
+            FileInfo[] files24a = di24a.GetFiles("*.txt");
+
+
+            int cantidad24a = files24a.Length;
+            if (cantidad24a > 0)
+            {
+                foreach (var itema in files24a)
+                {
+                    //string sourceFilea = @"\\10.223.208.41\Users\Administrator\Documents\LIVERDEDUPLOADS\" + itema.Name;
+                    //string sourceFilea = @"\\10.223.208.41\Users\Administrator\Documents\LIVERDED\" + itema.Name;
+                    string sourceFile = @"C:\Administración\Proyecto PENAFIEL\Ordenes\" + itema.Name;
+
+                    string lna = itema.Name.ToLower();
+                    string Ai_orden = lna.Replace(".txt", "");
+                    //facLabControler.PullOrderReport(Ai_orden);
+                    facLabControler.PullOrderReportPenafiel(Ai_orden);
+                    //string destinationFile = @"C:\Administración\Proyecto LIVERDED\Rpro\" + itema.Name;
+                    //System.IO.File.Move(sourceFile, destinationFile);
+
+                    DataTable rtds = facLabControler.ObtSegmento(Ai_orden);
+                    if (rtds.Rows.Count > 0)
+                    {
+                        foreach (DataRow iseg in rtds.Rows)
+                        {
+                            string nseg = iseg["segmento"].ToString();
+                            DataTable resa = facLabControler.GetSegmentoRepetidoReporte(nseg);
+                            //PASO 4 - SI EXISTE LE ACTUALIZA EL ESTATUS A 9
+                            if (resa.Rows.Count > 0)
+                            {
+                                foreach (DataRow gsegta in resa.Rows)
+                                {
+                                    //OBTENGO EL BILLTO Y EL ESTATUS DE SEGMENTOSPORTIMBRARJR Y LO INSERTO
+                                    string nfolio = gsegta["Folio"].ToString();
+                                    DateTime dt = DateTime.Parse(gsegta["Fecha"].ToString());
+                                    string rfecha = dt.ToString("yyyy'/'MM'/'dd HH:mm:ss");
+                                    DataTable resae = facLabControler.GetSegmentoJr(nfolio);
+                                    if (resae.Rows.Count > 0)
+                                    {
+                                        foreach (DataRow gsegtas in resae.Rows)
+                                        {
+                                            string rrseg = gsegtas["segmento"].ToString();
+                                            string rrbillto = gsegtas["billto"].ToString();
+                                            string rrestatus = gsegtas["estatus"].ToString();
+                                            string fechatim = rfecha;
+                                            facLabControler.PullReportUpdatePenafiel(Ai_orden, rrseg, rrbillto, rrestatus, fechatim);
+                                            //string destinationFile = @"\\10.223.208.41\Users\Administrator\Documents\LIVERDEDUPLOADS\" + item.Name;
+
+
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //OBTENER ESTATUS DEL segmentosportimbrar_JR E INSERTAR EN TABLA
+                                DataTable resae = facLabControler.GetSegmentoJr(nseg);
+                                if (resae.Rows.Count > 0)
+                                {
+                                    foreach (DataRow gsegtas in resae.Rows)
+                                    {
+                                        string rrseg = gsegtas["segmento"].ToString();
+                                        string rrbillto = gsegtas["billto"].ToString();
+                                        string rrestatus = gsegtas["estatus"].ToString();
+                                        string fechatim = "null";
+                                        facLabControler.PullReportUpdatePenafiel(Ai_orden, rrseg, rrbillto, rrestatus, fechatim);
+
+                                    }
+                                }
+                            }
+                            string destinationFiles = @"C:\Administración\Proyecto PENAFIEL\Procesadas\" + itema.Name;
+                            System.IO.File.Move(sourceFile, destinationFiles);
+
+                        }
+                    }
+                    else
+                    {
+                        string rrseg = "Cancelada";
+                        facLabControler.PullReportUpdate2Penafiel(Ai_orden, rrseg);
+                        string destinationFile = @"C:\Administración\Proyecto PENAFIEL\Procesadas\" + itema.Name;
+                        System.IO.File.Move(sourceFile, destinationFile);
+                    }
+
+                }
+
+            }
+        }
+        public void ReportePalacioH()
+        {
+            //DirectoryInfo di24a = new DirectoryInfo(@"\\10.223.208.41\Users\Administrator\Documents\LIVERDEDUPLOADS");
+            DirectoryInfo di24a = new DirectoryInfo(@"C:\Administración\Proyecto PALACIO DE HIERRO\Ordenes");
+
+            FileInfo[] files24a = di24a.GetFiles("*.XLS");
+
+
+            int cantidad24a = files24a.Length;
+            if (cantidad24a > 0)
+            {
+                foreach (var itema in files24a)
+                {
+                    //string sourceFilea = @"\\10.223.208.41\Users\Administrator\Documents\LIVERDEDUPLOADS\" + itema.Name;
+                    //string sourceFilea = @"\\10.223.208.41\Users\Administrator\Documents\LIVERDED\" + itema.Name;
+                    string sourceFile = @"C:\Administración\Proyecto PALACIO DE HIERRO\Ordenes\" + itema.Name;
+
+                    string lna = itema.Name.ToLower();
+                    string Ai_orden = lna.Replace(".xls", "");
+                    //facLabControler.PullOrderReport(Ai_orden);
+                    facLabControler.PullOrderReportPalacioH(Ai_orden);
+                    //facLabControler.PullOrderReportPenafiel(Ai_orden);
+                    //string destinationFile = @"C:\Administración\Proyecto LIVERDED\Rpro\" + itema.Name;
+                    //System.IO.File.Move(sourceFile, destinationFile);
+
+                    DataTable rtds = facLabControler.ObtSegmento(Ai_orden);
+                    if (rtds.Rows.Count > 0)
+                    {
+                        foreach (DataRow iseg in rtds.Rows)
+                        {
+                            string nseg = iseg["segmento"].ToString();
+                            DataTable resa = facLabControler.GetSegmentoRepetidoReporte(nseg);
+                            //PASO 4 - SI EXISTE LE ACTUALIZA EL ESTATUS A 9
+                            if (resa.Rows.Count > 0)
+                            {
+                                foreach (DataRow gsegta in resa.Rows)
+                                {
+                                    //OBTENGO EL BILLTO Y EL ESTATUS DE SEGMENTOSPORTIMBRARJR Y LO INSERTO
+                                    string nfolio = gsegta["Folio"].ToString();
+                                    DateTime dt = DateTime.Parse(gsegta["Fecha"].ToString());
+                                    string rfecha = dt.ToString("yyyy'/'MM'/'dd HH:mm:ss");
+                                    DataTable resae = facLabControler.GetSegmentoJr(nfolio);
+                                    if (resae.Rows.Count > 0)
+                                    {
+                                        foreach (DataRow gsegtas in resae.Rows)
+                                        {
+                                            string rrseg = gsegtas["segmento"].ToString();
+                                            string rrbillto = gsegtas["billto"].ToString();
+                                            string rrestatus = gsegtas["estatus"].ToString();
+                                            string fechatim = rfecha;
+                                            facLabControler.PullReportUpdatePalacioH(Ai_orden, rrseg, rrbillto, rrestatus, fechatim);
+                                            //string destinationFile = @"\\10.223.208.41\Users\Administrator\Documents\LIVERDEDUPLOADS\" + item.Name;
+
+
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //OBTENER ESTATUS DEL segmentosportimbrar_JR E INSERTAR EN TABLA
+                                DataTable resae = facLabControler.GetSegmentoJr(nseg);
+                                if (resae.Rows.Count > 0)
+                                {
+                                    foreach (DataRow gsegtas in resae.Rows)
+                                    {
+                                        string rrseg = gsegtas["segmento"].ToString();
+                                        string rrbillto = gsegtas["billto"].ToString();
+                                        string rrestatus = gsegtas["estatus"].ToString();
+                                        string fechatim = "null";
+                                        facLabControler.PullReportUpdatePalacioH(Ai_orden, rrseg, rrbillto, rrestatus, fechatim);
+
+                                    }
+                                }
+                            }
+                            string destinationFiles = @"C:\Administración\Proyecto PALACIO DE HIERRO\Procesadas\" + itema.Name;
+                            System.IO.File.Move(sourceFile, destinationFiles);
+
+                        }
+                    }
+                    else
+                    {
+                        string rrseg = "Cancelada";
+                        facLabControler.PullReportUpdate2PalacioH(Ai_orden, rrseg);
+                        string destinationFile = @"C:\Administración\Proyecto PALACIO DE HIERRO\Procesadas\" + itema.Name;
+                        System.IO.File.Move(sourceFile, destinationFile);
+                    }
+
+                }
+
+            }
+        }
         public void Extraer()
         {
             string[] values;
@@ -664,6 +1001,16 @@ namespace TLIVERDED
                                             string rfecha = dt.ToString("yyyy'/'MM'/'dd HH:mm:ss");
                                             DataTable uporder = facLabControler.UpdateOrderHeader(rorderh, rfecha);
                                             facLabControler.OrderHeader(rorderh, rfecha);
+                                            DataTable getSeg = facLabControler.GetSegJr(leg);
+                                            if (getSeg.Rows.Count > 0)
+                                            {
+                                                foreach (DataRow itemSeg in getSeg.Rows)
+                                                {
+                                                    string gbilto = itemSeg["billto"].ToString();
+                                                    facLabControler.InsertOrderReport(rorderh,leg,gbilto,tipom,rfecha); 
+                                                }
+                                            }
+                                            //facLabControler.PullReportLiverded(rorderh,leg,rfecha);
                                         }
                                     }
 
@@ -681,6 +1028,29 @@ namespace TLIVERDED
                                     string titulo = "Error en el segmento: ";
                                     //string mensaje = "Ver el historial de errores para mas información, copiar el error y reportar a TI.";
                                     DataTable updateLeg = facLabControler.UpdateLeg(leg, tipom);
+                                    DataTable rorder = facLabControler.SelectLegHeader(leg);
+
+                                    if (rorder.Rows.Count > 0)
+                                    {
+                                        foreach (DataRow reslo in rorder.Rows)
+                                        {
+                                            string rorderh = reslo["ord_hdrnumber"].ToString();
+                                            DateTime dt = DateTime.Parse(reslo["fecha"].ToString());
+                                            string rfecha = "null";
+                                            //DataTable uporder = facLabControler.UpdateOrderHeader(rorderh, rfecha);
+                                            //facLabControler.OrderHeader(rorderh, rfecha);
+                                            DataTable getSeg = facLabControler.GetSegJr(leg);
+                                            if (getSeg.Rows.Count > 0)
+                                            {
+                                                foreach (DataRow itemSeg in getSeg.Rows)
+                                                {
+                                                    string gbilto = itemSeg["billto"].ToString();
+                                                    facLabControler.InsertOrderReport(rorderh, leg, gbilto, tipom, rfecha);
+                                                }
+                                            }
+                                            //facLabControler.PullReportLiverded(rorderh,leg,rfecha);
+                                        }
+                                    }
 
 
 
@@ -695,6 +1065,29 @@ namespace TLIVERDED
                                 string titulo = "Error en el segmento: ";
                                 string mensaje = "Error al generar carta porte.";
                                 DataTable updateLeg = facLabControler.UpdateLeg(leg, tipom);
+                                DataTable rorder = facLabControler.SelectLegHeader(leg);
+
+                                if (rorder.Rows.Count > 0)
+                                {
+                                    foreach (DataRow reslo in rorder.Rows)
+                                    {
+                                        string rorderh = reslo["ord_hdrnumber"].ToString();
+                                        DateTime dt = DateTime.Parse(reslo["fecha"].ToString());
+                                        string rfecha = "null";
+                                        //DataTable uporder = facLabControler.UpdateOrderHeader(rorderh, rfecha);
+                                        //facLabControler.OrderHeader(rorderh, rfecha);
+                                        DataTable getSeg = facLabControler.GetSegJr(leg);
+                                        if (getSeg.Rows.Count > 0)
+                                        {
+                                            foreach (DataRow itemSeg in getSeg.Rows)
+                                            {
+                                                string gbilto = itemSeg["billto"].ToString();
+                                                facLabControler.InsertOrderReport(rorderh, leg, gbilto, tipom, rfecha);
+                                            }
+                                        }
+                                        //facLabControler.PullReportLiverded(rorderh,leg,rfecha);
+                                    }
+                                }
 
                                 facLabControler.enviarNotificacion(leg, titulo, mensaje);
                             }
@@ -709,6 +1102,29 @@ namespace TLIVERDED
                             string titulo = "Error en el segmento: ";
                             string mensaje = "Error en la obtención de datos:" + validaCFDI[0];
                             DataTable updateLeg = facLabControler.UpdateLeg(leg, tipom);
+                            DataTable rorder = facLabControler.SelectLegHeader(leg);
+
+                            if (rorder.Rows.Count > 0)
+                            {
+                                foreach (DataRow reslo in rorder.Rows)
+                                {
+                                    string rorderh = reslo["ord_hdrnumber"].ToString();
+                                    DateTime dt = DateTime.Parse(reslo["fecha"].ToString());
+                                    string rfecha = "null";
+                                    //DataTable uporder = facLabControler.UpdateOrderHeader(rorderh, rfecha);
+                                    //facLabControler.OrderHeader(rorderh, rfecha);
+                                    DataTable getSeg = facLabControler.GetSegJr(leg);
+                                    if (getSeg.Rows.Count > 0)
+                                    {
+                                        foreach (DataRow itemSeg in getSeg.Rows)
+                                        {
+                                            string gbilto = itemSeg["billto"].ToString();
+                                            facLabControler.InsertOrderReport(rorderh, leg, gbilto, tipom, rfecha);
+                                        }
+                                    }
+                                    //facLabControler.PullReportLiverded(rorderh,leg,rfecha);
+                                }
+                            }
                             facLabControler.enviarNotificacion(leg, titulo, mensaje);
                         }
                     }
@@ -721,6 +1137,29 @@ namespace TLIVERDED
                         string titulo = "Error en el segmento: ";
                         string mensaje = "Error al validar el segmento.";
                         DataTable updateLeg = facLabControler.UpdateLeg(leg, tipom);
+                        DataTable rorder = facLabControler.SelectLegHeader(leg);
+
+                        if (rorder.Rows.Count > 0)
+                        {
+                            foreach (DataRow reslo in rorder.Rows)
+                            {
+                                string rorderh = reslo["ord_hdrnumber"].ToString();
+                                DateTime dt = DateTime.Parse(reslo["fecha"].ToString());
+                                string rfecha = "null";
+                                //DataTable uporder = facLabControler.UpdateOrderHeader(rorderh, rfecha);
+                                //facLabControler.OrderHeader(rorderh, rfecha);
+                                DataTable getSeg = facLabControler.GetSegJr(leg);
+                                if (getSeg.Rows.Count > 0)
+                                {
+                                    foreach (DataRow itemSeg in getSeg.Rows)
+                                    {
+                                        string gbilto = itemSeg["billto"].ToString();
+                                        facLabControler.InsertOrderReport(rorderh, leg, gbilto, tipom, rfecha);
+                                    }
+                                }
+                                //facLabControler.PullReportLiverded(rorderh,leg,rfecha);
+                            }
+                        }
 
                         facLabControler.enviarNotificacion(leg, titulo, mensaje);
                     }
@@ -734,6 +1173,29 @@ namespace TLIVERDED
                     string titulo = "Error en el segmento: ";
                     string mensaje = "Segmento invalido";
                     DataTable updateLeg = facLabControler.UpdateLeg(leg, tipom);
+                    DataTable rorder = facLabControler.SelectLegHeader(leg);
+
+                    if (rorder.Rows.Count > 0)
+                    {
+                        foreach (DataRow reslo in rorder.Rows)
+                        {
+                            string rorderh = reslo["ord_hdrnumber"].ToString();
+                            DateTime dt = DateTime.Parse(reslo["fecha"].ToString());
+                            string rfecha = "null";
+                            //DataTable uporder = facLabControler.UpdateOrderHeader(rorderh, rfecha);
+                            //facLabControler.OrderHeader(rorderh, rfecha);
+                            DataTable getSeg = facLabControler.GetSegJr(leg);
+                            if (getSeg.Rows.Count > 0)
+                            {
+                                foreach (DataRow itemSeg in getSeg.Rows)
+                                {
+                                    string gbilto = itemSeg["billto"].ToString();
+                                    facLabControler.InsertOrderReport(rorderh, leg, gbilto, tipom, rfecha);
+                                }
+                            }
+                            //facLabControler.PullReportLiverded(rorderh,leg,rfecha);
+                        }
+                    }
                     facLabControler.enviarNotificacion(leg, titulo, mensaje);
                 }
             }

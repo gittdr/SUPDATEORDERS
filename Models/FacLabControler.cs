@@ -59,6 +59,22 @@ namespace TLIVERDED.Models
         {
             return this.modelFact.GetSegmentoJr(leg);
         }
+        public DataTable GetSegmentoJCLIVERDED(string leg)
+        {
+            return this.modelFact.GetSegmentoJCLIVERDED(leg);
+        }
+        public DataTable GetSegmentoJCLIVERDEDCPP(string leg)
+        {
+            return this.modelFact.GetSegmentoJCLIVERDEDCPP(leg);
+        }
+        public DataTable GetSegmentoJCPENAFIEL(string leg)
+        {
+            return this.modelFact.GetSegmentoJCPENAFIEL(leg);
+        }
+        public DataTable GetSegmentoJCPENAFIELCPP(string leg)
+        {
+            return this.modelFact.GetSegmentoJCPENAFIELCPP(leg);
+        }
         public DataTable GetSegmentoRepetidoReporte(string leg)
         {
             return this.modelFact.GetSegmentoRepetidoReporte(leg);
@@ -83,17 +99,57 @@ namespace TLIVERDED.Models
         {
             this.modelFact.PullReportUpdate2(Ai_orden, rrseg);
         }
+        public void PullReportUpdateCPP(string rrseg, string rfecha)
+        {
+            this.modelFact.PullReportUpdateCPP(rrseg,rfecha);
+        }
+        public void PullReportUpdateCPPPENAFIEL(string rrseg, string rfecha)
+        {
+            this.modelFact.PullReportUpdateCPPPENAFIEL(rrseg, rfecha);
+        }
+        public void PullReportUpdatePenafiel(string Ai_orden, string rrseg, string rrbillto, string rrestatus, string fechatim)
+        {
+            this.modelFact.PullReportUpdatePenafiel(Ai_orden, rrseg, rrbillto, rrestatus, fechatim);
+        }
+        public void PullReportUpdate2Penafiel(string Ai_orden, string rrseg)
+        {
+            this.modelFact.PullReportUpdate2Penafiel(Ai_orden, rrseg);
+        }
+        public void PullReportUpdatePalacioH(string Ai_orden, string rrseg, string rrbillto, string rrestatus, string fechatim)
+        {
+            this.modelFact.PullReportUpdatePalacioH(Ai_orden, rrseg, rrbillto, rrestatus, fechatim);
+        }
+        public void PullReportUpdate2PalacioH(string Ai_orden, string rrseg)
+        {
+            this.modelFact.PullReportUpdate2PalacioH(Ai_orden, rrseg);
+        }
         public void PullOrderReport(string Ai_orden)
         {
             this.modelFact.PullOrderReport(Ai_orden);
+        }
+        public void PullOrderReportPenafiel(string Ai_orden)
+        {
+            this.modelFact.PullOrderReportPenafiel(Ai_orden);
+        }
+        public void PullOrderReportPalacioH(string Ai_orden)
+        {
+            this.modelFact.PullOrderReportPalacioH(Ai_orden);
         }
         public void DeleteMerca(string segmentod)
         {
             this.modelFact.DeleteMerca(segmentod);
         }
+        public void InsertOrderReport(string rorderh, string leg, string gbilto, string tipom, string rfecha)
+        {
+            this.modelFact.InsertOrderReport(rorderh, leg, gbilto, tipom, rfecha);
+        }
         public DataTable ExisteSegmento(string leg)
         {
             return this.modelFact.ExisteSegmento(leg);
+        }
+        public DataTable GetSegJr(string leg)
+        {
+            return this.modelFact.GetSegJr(leg);
         }
         public DataTable UpdateLeg(string leg, string tipom)
         {
