@@ -257,6 +257,68 @@ namespace TLIVERDED.Models
             }
             return dataTable;
         }
+        public DataTable GetSegmentoJCPALACIOH(string leg)
+        {
+            DataTable dataTable = new DataTable();
+            string cadena2 = @"Data source=172.24.16.112; Initial Catalog=TMWSuite; User ID=sa; Password=tdr9312;Trusted_Connection=false;MultipleActiveResultSets=true";
+            using (SqlConnection connection = new SqlConnection(cadena2))
+            {
+                connection.Open();
+                using (SqlCommand selectCommand = new SqlCommand("GetSegmentoJCPALACIOH", connection))
+                {
+
+                    selectCommand.CommandType = CommandType.StoredProcedure;
+                    selectCommand.CommandTimeout = 100000;
+                    selectCommand.Parameters.AddWithValue("@leg", (object)leg);
+                    selectCommand.ExecuteNonQuery();
+                    using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(selectCommand))
+                    {
+                        try
+                        {
+                            //selectCommand.Connection.Open();
+                            sqlDataAdapter.Fill(dataTable);
+                        }
+                        catch (SqlException ex)
+                        {
+                            connection.Close();
+                            string message = ex.Message;
+                        }
+                    }
+                }
+            }
+            return dataTable;
+        }
+        public DataTable GetSegmentoJCPALACIOHCPP(string leg)
+        {
+            DataTable dataTable = new DataTable();
+            string cadena2 = @"Data source=172.24.16.112; Initial Catalog=TMWSuite; User ID=sa; Password=tdr9312;Trusted_Connection=false;MultipleActiveResultSets=true";
+            using (SqlConnection connection = new SqlConnection(cadena2))
+            {
+                connection.Open();
+                using (SqlCommand selectCommand = new SqlCommand("GetSegmentoJCPALACIOHCPP", connection))
+                {
+
+                    selectCommand.CommandType = CommandType.StoredProcedure;
+                    selectCommand.CommandTimeout = 100000;
+                    selectCommand.Parameters.AddWithValue("@leg", (object)leg);
+                    selectCommand.ExecuteNonQuery();
+                    using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(selectCommand))
+                    {
+                        try
+                        {
+                            //selectCommand.Connection.Open();
+                            sqlDataAdapter.Fill(dataTable);
+                        }
+                        catch (SqlException ex)
+                        {
+                            connection.Close();
+                            string message = ex.Message;
+                        }
+                    }
+                }
+            }
+            return dataTable;
+        }
         public DataTable ObtSegmento(string orden)
         {
             DataTable dataTable = new DataTable();
@@ -424,6 +486,39 @@ namespace TLIVERDED.Models
             {
 
                 using (SqlCommand selectCommand = new SqlCommand("sp_PullReportUpdateCPPPENAFIEL", connection))
+                {
+
+                    selectCommand.CommandType = CommandType.StoredProcedure;
+                    selectCommand.CommandTimeout = 100000;
+                    selectCommand.Parameters.AddWithValue("@rrseg", (object)rrseg);
+                    selectCommand.Parameters.AddWithValue("@rfecha", (object)rfecha);
+
+                    try
+                    {
+                        connection.Open();
+                        selectCommand.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        string message = ex.Message;
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+                }
+            }
+
+        }
+        public void PullReportUpdateCPPPALACIOH(string rrseg, string rfecha)
+        {
+            string cadena2 = @"Data source=172.24.16.112; Initial Catalog=TMWSuite; User ID=sa; Password=tdr9312;Trusted_Connection=false;MultipleActiveResultSets=true";
+            //DataTable dataTable = new DataTable();
+
+            using (SqlConnection connection = new SqlConnection(cadena2))
+            {
+
+                using (SqlCommand selectCommand = new SqlCommand("sp_PullReportUpdateCPPPALACIOH", connection))
                 {
 
                     selectCommand.CommandType = CommandType.StoredProcedure;
@@ -1233,6 +1328,36 @@ namespace TLIVERDED.Models
             {
                 connection.Open();
                 using (SqlCommand selectCommand = new SqlCommand("sp_obtener_order_header", connection))
+                {
+
+                    selectCommand.CommandType = CommandType.StoredProcedure;
+                    selectCommand.CommandTimeout = 100000;
+                    selectCommand.Parameters.AddWithValue("@leg", (object)orseg);
+                    selectCommand.ExecuteNonQuery();
+                    using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(selectCommand))
+                    {
+                        try
+                        {
+                            //selectCommand.Connection.Open();
+                            sqlDataAdapter.Fill(dataTable);
+                        }
+                        catch (SqlException ex)
+                        {
+                            connection.Close();
+                            string message = ex.Message;
+                        }
+                    }
+                }
+            }
+            return dataTable;
+        }
+        public DataTable SelectLegHeaderOnly(string orseg)
+        {
+            DataTable dataTable = new DataTable();
+            using (SqlConnection connection = new SqlConnection(this._ConnectionString))
+            {
+                connection.Open();
+                using (SqlCommand selectCommand = new SqlCommand("sp_obtener_order_header_ONLY", connection))
                 {
 
                     selectCommand.CommandType = CommandType.StoredProcedure;

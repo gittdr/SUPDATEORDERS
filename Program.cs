@@ -85,6 +85,8 @@ namespace TLIVERDED
             //}
             //muobject.UpdateCPReportePenafiel();
             muobject.Extraer();
+            //string eleg = "1325791";
+            //valida(eleg);
 
             
 
@@ -244,6 +246,33 @@ namespace TLIVERDED
                     //string destinationFile = @"\\10.223.208.41\Users\Administrator\Documents\LIVERDEDUPLOADS\" + item.Name;
 
 
+                }
+            }
+
+        }
+        public void UpdateCPReportePalacioH(string leg)
+        {
+            string lex = "1325479";
+            DataTable resaepal = facLabControler.GetSegmentoJCPALACIOH(leg);
+
+            if (resaepal.Rows.Count > 0)
+            {
+                foreach (DataRow gsegtaspal in resaepal.Rows)
+                {
+                    string rorder = gsegtaspal["orden"].ToString();
+                    string rrseg = gsegtaspal["segmento"].ToString();
+
+                    DataTable rcpppal = facLabControler.GetSegmentoJCPALACIOHCPP(leg);
+                    if (rcpppal.Rows.Count > 0)
+                    {
+                        foreach (DataRow ircpppal in rcpppal.Rows)
+                        {
+                            DateTime dtpal = DateTime.Parse(ircpppal["Fecha"].ToString());
+                            string rfecha = dtpal.ToString("yyyy'/'MM'/'dd HH:mm:ss");
+                            facLabControler.PullReportUpdateCPPPALACIOH(rrseg, rfecha);
+                        }
+
+                    }
                 }
             }
 
@@ -1028,14 +1057,14 @@ namespace TLIVERDED
                                     string titulo = "Error en el segmento: ";
                                     //string mensaje = "Ver el historial de errores para mas información, copiar el error y reportar a TI.";
                                     DataTable updateLeg = facLabControler.UpdateLeg(leg, tipom);
-                                    DataTable rorder = facLabControler.SelectLegHeader(leg);
+                                    DataTable rorder = facLabControler.SelectLegHeaderOnly(leg);
 
                                     if (rorder.Rows.Count > 0)
                                     {
                                         foreach (DataRow reslo in rorder.Rows)
                                         {
                                             string rorderh = reslo["ord_hdrnumber"].ToString();
-                                            DateTime dt = DateTime.Parse(reslo["fecha"].ToString());
+                                            //DateTime dt = DateTime.Parse(reslo["fecha"].ToString());
                                             string rfecha = "null";
                                             //DataTable uporder = facLabControler.UpdateOrderHeader(rorderh, rfecha);
                                             //facLabControler.OrderHeader(rorderh, rfecha);
@@ -1072,7 +1101,7 @@ namespace TLIVERDED
                                     foreach (DataRow reslo in rorder.Rows)
                                     {
                                         string rorderh = reslo["ord_hdrnumber"].ToString();
-                                        DateTime dt = DateTime.Parse(reslo["fecha"].ToString());
+                                        //DateTime dt = DateTime.Parse(reslo["fecha"].ToString());
                                         string rfecha = "null";
                                         //DataTable uporder = facLabControler.UpdateOrderHeader(rorderh, rfecha);
                                         //facLabControler.OrderHeader(rorderh, rfecha);
@@ -1102,14 +1131,14 @@ namespace TLIVERDED
                             string titulo = "Error en el segmento: ";
                             string mensaje = "Error en la obtención de datos:" + validaCFDI[0];
                             DataTable updateLeg = facLabControler.UpdateLeg(leg, tipom);
-                            DataTable rorder = facLabControler.SelectLegHeader(leg);
+                            DataTable rorder = facLabControler.SelectLegHeaderOnly(leg);
 
                             if (rorder.Rows.Count > 0)
                             {
                                 foreach (DataRow reslo in rorder.Rows)
                                 {
                                     string rorderh = reslo["ord_hdrnumber"].ToString();
-                                    DateTime dt = DateTime.Parse(reslo["fecha"].ToString());
+                                    //DateTime dt = DateTime.Parse(reslo["fecha"].ToString());
                                     string rfecha = "null";
                                     //DataTable uporder = facLabControler.UpdateOrderHeader(rorderh, rfecha);
                                     //facLabControler.OrderHeader(rorderh, rfecha);
@@ -1137,14 +1166,14 @@ namespace TLIVERDED
                         string titulo = "Error en el segmento: ";
                         string mensaje = "Error al validar el segmento.";
                         DataTable updateLeg = facLabControler.UpdateLeg(leg, tipom);
-                        DataTable rorder = facLabControler.SelectLegHeader(leg);
+                        DataTable rorder = facLabControler.SelectLegHeaderOnly(leg);
 
                         if (rorder.Rows.Count > 0)
                         {
                             foreach (DataRow reslo in rorder.Rows)
                             {
                                 string rorderh = reslo["ord_hdrnumber"].ToString();
-                                DateTime dt = DateTime.Parse(reslo["fecha"].ToString());
+                                //DateTime dt = DateTime.Parse(reslo["fecha"].ToString());
                                 string rfecha = "null";
                                 //DataTable uporder = facLabControler.UpdateOrderHeader(rorderh, rfecha);
                                 //facLabControler.OrderHeader(rorderh, rfecha);
@@ -1173,14 +1202,14 @@ namespace TLIVERDED
                     string titulo = "Error en el segmento: ";
                     string mensaje = "Segmento invalido";
                     DataTable updateLeg = facLabControler.UpdateLeg(leg, tipom);
-                    DataTable rorder = facLabControler.SelectLegHeader(leg);
+                    DataTable rorder = facLabControler.SelectLegHeaderOnly(leg);
 
                     if (rorder.Rows.Count > 0)
                     {
                         foreach (DataRow reslo in rorder.Rows)
                         {
                             string rorderh = reslo["ord_hdrnumber"].ToString();
-                            DateTime dt = DateTime.Parse(reslo["fecha"].ToString());
+                            //DateTime dt = DateTime.Parse(reslo["fecha"].ToString());
                             string rfecha = "null";
                             //DataTable uporder = facLabControler.UpdateOrderHeader(rorderh, rfecha);
                             //facLabControler.OrderHeader(rorderh, rfecha);

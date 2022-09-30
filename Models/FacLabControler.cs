@@ -47,6 +47,10 @@ namespace TLIVERDED.Models
         {
             return this.modelFact.SelectLegHeader(orseg);
         }
+        public DataTable SelectLegHeaderOnly(string orseg)
+        {
+            return this.modelFact.SelectLegHeaderOnly(orseg);
+        }
         public DataTable ExisteStatus(string seg)
         {
             return this.modelFact.ExisteStatus(seg);
@@ -74,6 +78,14 @@ namespace TLIVERDED.Models
         public DataTable GetSegmentoJCPENAFIELCPP(string leg)
         {
             return this.modelFact.GetSegmentoJCPENAFIELCPP(leg);
+        }
+        public DataTable GetSegmentoJCPALACIOH(string leg)
+        {
+            return this.modelFact.GetSegmentoJCPALACIOH(leg);
+        }
+        public DataTable GetSegmentoJCPALACIOHCPP(string leg)
+        {
+            return this.modelFact.GetSegmentoJCPALACIOHCPP(leg);
         }
         public DataTable GetSegmentoRepetidoReporte(string leg)
         {
@@ -106,6 +118,10 @@ namespace TLIVERDED.Models
         public void PullReportUpdateCPPPENAFIEL(string rrseg, string rfecha)
         {
             this.modelFact.PullReportUpdateCPPPENAFIEL(rrseg, rfecha);
+        }
+        public void PullReportUpdateCPPPALACIOH(string rrseg, string rfecha)
+        {
+            this.modelFact.PullReportUpdateCPPPALACIOH(rrseg, rfecha);
         }
         public void PullReportUpdatePenafiel(string Ai_orden, string rrseg, string rrbillto, string rrestatus, string fechatim)
         {
