@@ -95,6 +95,18 @@ namespace TLIVERDED.Models
         {
             return this.modelFact.TieneMercancias(leg);
         }
+        public DataTable getReporteLiver()
+        {
+            return this.modelFact.getReporteLiver();
+        }
+        public DataTable getReportePenaf()
+        {
+            return this.modelFact.getReportePenaf();
+        }
+        public DataTable getReportePal()
+        {
+            return this.modelFact.getReportePal();
+        }
         public void GetMerca(string Ai_orden, string segmentod, string Av_cmd_code, string Av_cmd_description, string Af_weight, string Av_weightunit, string Af_count, string Av_countunit)
         {
             this.modelFact.GetMerca(Ai_orden, segmentod, Av_cmd_code, Av_cmd_description, Af_weight, Av_weightunit, Af_count, Av_countunit);

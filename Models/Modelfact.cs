@@ -452,7 +452,7 @@ namespace TLIVERDED.Models
             using (SqlConnection connection = new SqlConnection(cadena2))
             {
 
-                using (SqlCommand selectCommand = new SqlCommand("sp_update_orderheader", connection))
+                using (SqlCommand selectCommand = new SqlCommand("sp_PullReportUpdateCPPLIVERDED", connection))
                 {
 
                     selectCommand.CommandType = CommandType.StoredProcedure;
@@ -584,6 +584,81 @@ namespace TLIVERDED.Models
             using (SqlConnection connection = new SqlConnection(this._ConnectionString))
             {
                 using (SqlCommand selectCommand = new SqlCommand("select folio as Folio,fhemision as Fecha, nombrecliente as Cliente, idreceptor from VISTA_fe_Header", connection))
+                {
+                    selectCommand.CommandType = CommandType.Text;
+                    selectCommand.CommandTimeout = 100000;
+                    using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(selectCommand))
+                    {
+                        try
+                        {
+                            selectCommand.Connection.Open();
+                            sqlDataAdapter.Fill(dataTable);
+                        }
+                        catch (SqlException ex)
+                        {
+                            string message = ex.Message;
+                        }
+                    }
+                }
+            }
+            return dataTable;
+        }
+        public DataTable getReporteLiver()
+        {
+            DataTable dataTable = new DataTable();
+            using (SqlConnection connection = new SqlConnection(this._ConnectionString))
+            {
+                using (SqlCommand selectCommand = new SqlCommand("SELECT orden, segmento, billto, estatus, fechaTimbrado FROM Reporte_Timbradas WHERE estatus in ('1','3','5') and fechaTimbrado = 'null'", connection))
+                {
+                    selectCommand.CommandType = CommandType.Text;
+                    selectCommand.CommandTimeout = 100000;
+                    using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(selectCommand))
+                    {
+                        try
+                        {
+                            selectCommand.Connection.Open();
+                            sqlDataAdapter.Fill(dataTable);
+                        }
+                        catch (SqlException ex)
+                        {
+                            string message = ex.Message;
+                        }
+                    }
+                }
+            }
+            return dataTable;
+        }
+        public DataTable getReportePenaf()
+        {
+            DataTable dataTable = new DataTable();
+            using (SqlConnection connection = new SqlConnection(this._ConnectionString))
+            {
+                using (SqlCommand selectCommand = new SqlCommand("SELECT orden, segmento, billto, estatus, fechaTimbrado FROM RtPenafiel WHERE estatus in ('1','3','5') and fechaTimbrado = 'null'", connection))
+                {
+                    selectCommand.CommandType = CommandType.Text;
+                    selectCommand.CommandTimeout = 100000;
+                    using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(selectCommand))
+                    {
+                        try
+                        {
+                            selectCommand.Connection.Open();
+                            sqlDataAdapter.Fill(dataTable);
+                        }
+                        catch (SqlException ex)
+                        {
+                            string message = ex.Message;
+                        }
+                    }
+                }
+            }
+            return dataTable;
+        }
+        public DataTable getReportePal()
+        {
+            DataTable dataTable = new DataTable();
+            using (SqlConnection connection = new SqlConnection(this._ConnectionString))
+            {
+                using (SqlCommand selectCommand = new SqlCommand("SELECT orden, segmento, billto, estatus, fechaTimbrado FROM RtPlacioH WHERE estatus in ('1','3','5') and fechaTimbrado = 'null'", connection))
                 {
                     selectCommand.CommandType = CommandType.Text;
                     selectCommand.CommandTimeout = 100000;
