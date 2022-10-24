@@ -59,6 +59,7 @@ namespace TLIVERDED
             muobject.UpdateCPReporte();
             muobject.UpdateCPReportePenafiel();
             muobject.UpdateCPReportePalacioH();
+            muobject.UpdateCPReporteDHL();
 
         }
 
@@ -139,6 +140,35 @@ namespace TLIVERDED
                     }
                 }
             }
+        }
+        public void UpdateCPReporteDHL()
+        {
+            
+            DataTable restdr = facLabControler.getReporteDhl();
+
+            if (restdr.Rows.Count > 0)
+            {
+                foreach (DataRow gsegtdr in restdr.Rows)
+                {
+                    string rordertdr = gsegtdr["orden"].ToString();
+                    string rrsegtdr = gsegtdr["segmento"].ToString();
+
+                    DataTable rcpppaltdr = facLabControler.GetSegmentoJCDHLCPP(rrsegtdr);
+                    if (rcpppaltdr.Rows.Count > 0)
+                    {
+                        foreach (DataRow ircpppaltdr in rcpppaltdr.Rows)
+                        {
+                            DateTime dtpaltdr = DateTime.Parse(ircpppaltdr["Fecha"].ToString());
+                            string rfechatdr = dtpaltdr.ToString("yyyy'/'MM'/'dd HH:mm:ss");
+                            facLabControler.PullReportUpdateCPDHL(rrsegtdr, rfechatdr);
+                            DataTable uporder = facLabControler.UpdateOrderHeader(rordertdr, rfechatdr);
+                            facLabControler.OrderHeader(rordertdr, rfechatdr);
+                        }
+
+                    }
+                }
+            }
+
         }
     }
 }

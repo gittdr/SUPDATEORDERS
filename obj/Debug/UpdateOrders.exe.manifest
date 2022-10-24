@@ -78,14 +78,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="UpdateOrders.exe" size="70632">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="UpdateOrders.exe" size="72168">
       <assemblyIdentity name="UpdateOrders" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>mtZ34eiKcnZMCH+kNZM+TzPPFewC2w6uLQ02HRd/+jI=</dsig:DigestValue>
+        <dsig:DigestValue>hAQ1qZdMckLPoDJl808JWKb09tReuRf8P2ZS8pu1xlg=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
